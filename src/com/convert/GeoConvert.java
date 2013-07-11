@@ -87,9 +87,25 @@ public class GeoConvert {
 		    feature.addGeometry(geometry);
 		    
 		    JSONArray aggregated = new JSONArray();
-		    aggregated.add(metrics);
-		    aggregated.add(tests);
-		    aggregated.add(conditions);
+		    for (Object temp : metrics) {
+		    	JSONObject tempJSObj = (JSONObject) temp;
+		    	for (Object temp2 : tempJSObj.keySet()) {
+		    		aggregated.add(temp2.toString() + ":" + tempJSObj.get(temp2));
+		    	}
+		    }
+		    for (Object temp : tests) {
+		    	JSONObject tempJSObj = (JSONObject) temp;
+		    	for (Object temp2 : tempJSObj.keySet()) {
+		    		aggregated.add(temp2.toString() + ":" + tempJSObj.get(temp2));
+		    	}
+		    }
+		    for (Object temp : conditions) {
+		    	JSONObject tempJSObj = (JSONObject) temp;
+		    	for (Object temp2 : tempJSObj.keySet()) {
+		    		aggregated.add(temp2.toString() + ":" + tempJSObj.get(temp2));
+		    	}
+		    }
+		    
 		    feature.addProperties(aggregated);
 		    
 		    System.out.println(feature);
