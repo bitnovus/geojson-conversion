@@ -1,9 +1,14 @@
 package com.convert;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 public class GeoJSONFeature extends JSONObject {
 
+	public void addProperties(JSONArray input) {
+		this.put("properties", input);
+	}
+	
 	public void addProperties(JSONObject input) {
 		this.put("properties", input);
 	}

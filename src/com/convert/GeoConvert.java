@@ -63,6 +63,8 @@ public class GeoConvert {
 		    JSONArray tempCoordinates = new JSONArray();
 		    
 		    JSONArray metrics = (JSONArray) jsobj.get("metrics");
+		    JSONArray tests = (JSONArray) jsobj.get("tests");
+		    JSONArray conditions = (JSONArray) jsobj.get("conditions");
 		    Set coll = jsobj.entrySet();
 		    for (Object temp : coll) {
 		    	System.out.println(temp.toString());
@@ -83,7 +85,12 @@ public class GeoConvert {
 		    }
 		    GeoJSONGeometry geometry = new GeoJSONGeometry("LineString", tempCoordinates);
 		    feature.addGeometry(geometry);
-		    feature.addProperties(jsobj);
+		    
+		    JSONArray aggregated = new JSONArray();
+		    aggregated.add(metrics);
+		    aggregated.add(tests);
+		    aggregated.add(conditions);
+		    feature.addProperties(aggregated);
 		    
 		    System.out.println(feature);
 		  }
