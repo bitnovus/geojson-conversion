@@ -86,23 +86,23 @@ public class GeoConvert {
 		    GeoJSONGeometry geometry = new GeoJSONGeometry("LineString", tempCoordinates);
 		    feature.addGeometry(geometry);
 		    
-		    JSONArray aggregated = new JSONArray();
+		    JSONObject aggregated = new JSONObject();
 		    for (Object temp : metrics) {
 		    	JSONObject tempJSObj = (JSONObject) temp;
 		    	for (Object temp2 : tempJSObj.keySet()) {
-		    		aggregated.add(temp2.toString() + ":" + tempJSObj.get(temp2));
+		    		aggregated.put(temp2, tempJSObj.get(temp2));
 		    	}
 		    }
 		    for (Object temp : tests) {
 		    	JSONObject tempJSObj = (JSONObject) temp;
 		    	for (Object temp2 : tempJSObj.keySet()) {
-		    		aggregated.add(temp2.toString() + ":" + tempJSObj.get(temp2));
+		    		aggregated.put(temp2, tempJSObj.get(temp2));
 		    	}
 		    }
 		    for (Object temp : conditions) {
 		    	JSONObject tempJSObj = (JSONObject) temp;
 		    	for (Object temp2 : tempJSObj.keySet()) {
-		    		aggregated.add(temp2.toString() + ":" + tempJSObj.get(temp2));
+		    		aggregated.put(temp2, tempJSObj.get(temp2));
 		    	}
 		    }
 		    
