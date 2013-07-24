@@ -96,6 +96,7 @@ public class GeoConvert {
 
 			int gsmCount = 0;
 			int cdmaCount = 0;
+			int networkCount = 0;
 
 			for (Object temp : metrics) {
 				sb = new StringBuilder();
@@ -108,6 +109,12 @@ public class GeoConvert {
 				else if (testType.equals("cdma_cell_location")) {
 					sb.append("dbm").append(INTERNAL_DESIGNATOR).append(tempJSObj.get("dbm"));
 					aggregated.put(testType + " (" + (++cdmaCount) + ")", sb.toString());
+				}
+				else if (testType.equals("network_data")) {
+					sb.append("network_type").append(INTERNAL_DESIGNATOR).append(tempJSObj.get("network_type")).append(INTERNAL_DELIMITER);
+					sb.append("active_network_type").append(INTERNAL_DESIGNATOR).append(tempJSObj.get("active_network_type")).append(INTERNAL_DELIMITER);
+					sb.append("network_operator_name").append(INTERNAL_DESIGNATOR).append(tempJSObj.get("network_operator_name")).append(INTERNAL_DELIMITER);
+					aggregated.put(testType + " (" + (++networkCount) + ")", sb.toString());
 				}
 			}
 
@@ -138,6 +145,26 @@ public class GeoConvert {
 		}
 		return sb.toString();
 	}
+	
+	private static void explore(File start, GeoJSONFeatureCollection collection) throws FileNotFoundException {
+		FileReader fileIn;
+		String jsonText = "";
+		File[] fileList = start.listFiles();
+		
+		for (int i = 0; i < fileList.length; i++) {
+			if (fileList[i].isFile()) {
+				fileIn = new FileReader(fileList[i]);
+				jsonText = readFile(fileIn);
+				GeoJSONFeature feature = getFeature(jsonText);
+				collection.addFeature(feature);
+			}
+			else if (fileList[i].isDirectory()) {
+				explore(fileList[i], collection);
+			}
+		}
+		
+		return;
+	}
 
 	/**
 	 *  { "type": "Feature",
@@ -151,22 +178,14 @@ public class GeoConvert {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		FileReader fileIn;
-		String jsonText = "";
 
 		try {
-			File folder = new File("examples/tmobile_demo_data");
-			File[] fileList = folder.listFiles();
+			File folder = new File("examples");
 			GeoJSONFeatureCollection collection = new GeoJSONFeatureCollection();
 
-			for (int i = 0; i < fileList.length; i++) {
-				if (fileList[i].isFile()) {
-					fileIn = new FileReader(fileList[i]);
-					jsonText = readFile(fileIn);
-					GeoJSONFeature feature = getFeature(jsonText);
-					collection.addFeature(feature);
-				}
-			}
+			File[] fileList = folder.listFiles();
+
+			explore(folder, collection);
 			collection.addCRS("urn:ogc:def:crs:OGC:1.3:CRS84");
 			System.out.println(collection.toJSONString());
 
